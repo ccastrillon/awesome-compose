@@ -1,0 +1,24 @@
+version: 0.1
+component: build
+timeoutInSeconds: 10000
+shell: bash
+
+env:
+  exportedVariables:
+    - BuildServiceDemoVersion
+
+steps: 
+  - type: Command
+    name: "Docker"
+    command: |
+      BuildServiceDemoVersion='echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7'
+      echo $BuildServiceDemoVersion
+      docker build -t phpdemo .
+
+outputArtifacts:
+  - name: phpdemo
+    type: DOCKER_IMAGE
+    location: phpdemo
+  - name: build-service-demo-kube-manifest
+    type: BINARY
+    location: deployment/app.yaml
